@@ -104,6 +104,18 @@ function crumbs_menu() {
     );
   }
 
+  // Add support for the Menu Firstitem module.
+  if (module_exists('menu_firstchild')) {
+    $items['crumbs/firstchild-menu-item/%menu_link'] = array(
+      'access callback' => TRUE,
+      'page callback' => 'crumbs_firstchild_menu_link_page',
+      'page arguments' => array(2),
+      'title callback' => 'crumbs_firstchild_menu_link_title',
+      'title arguments' => array(2),
+      'type' => MENU_CALLBACK,
+    );
+  }
+
   return $items;
 }
 

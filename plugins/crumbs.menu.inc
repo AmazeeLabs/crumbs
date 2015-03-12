@@ -12,6 +12,7 @@ function menu_crumbs_plugins($api) {
   $api->disabledByDefault('hierarchy.*');
   $api->disabledByDefault('link_title.*');
   $api->routeMonoPlugin('crumbs/special-menu-item/%', 'specialItems');
+  $api->routeMonoPlugin('crumbs/firstchild-menu-item/%', 'firstchildItems');
 }
 
 
@@ -51,6 +52,9 @@ class menu_CrumbsMultiPlugin_hierarchy implements crumbs_MultiPlugin_FindParentI
       if (!isset($candidates[$row->menu_name])) {
         if ('<nolink>' === $row->parent_path) {
           $candidates[$row->menu_name] = 'crumbs/special-menu-item/' . $row->plid;
+        }
+        elseif ('<firstchild>' === $row->parent_path) {
+          $candidates[$row->menu_name] = 'crumbs/firstchild-menu-item/' . $row->plid;
         }
         else {
           $candidates[$row->menu_name] = $row->parent_path;
@@ -201,4 +205,37 @@ class menu_CrumbsMonoPlugin_specialItems implements crumbs_MonoPlugin_FindParent
     return $parent_path;
   }
 
+}
+
+class menu_CrumbsMonoPlugin_firstchildItems implements crumbs_MonoPlugin_FindParentInterface {
+
+  /**
+   * {@inheritdoc}
+   */
+  function describe($api) {
+    return 'Menu Firstchild';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  function findParent($path, $item) {
+
+    $menu_link = end($item['map']);
+    if (empty($menu_link) || !is_array($menu_link) || empty($menu_link['plid'])) {
+      return NULL;
+    }
+    $parent_link = menu_link_load($menu_link['plid']);
+
+    if (empty($parent_link['link_path'])) {
+      return NULL;
+    }
+
+    $parent_path = $parent_link['link_path'];
+    if ('<firstchild>' === $parent_path) {
+      return 'crumbs/firstchild-menu-item/' . $menu_link['plid'];
+    }
+
+    return $parent_path;
+  }
 }

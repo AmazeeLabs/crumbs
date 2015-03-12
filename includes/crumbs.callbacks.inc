@@ -23,6 +23,24 @@ function crumbs_special_menu_link_title(array $menu_link) {
 }
 
 /**
+ * Page callback for 'crumbs/firstchild-menu-item/%menu_link'
+ *
+ * @param array $menu_link
+ */
+function crumbs_firstchild_menu_link_page(array $menu_link) {
+  drupal_goto('<front>');
+}
+
+/**
+ * Title callback for 'crumbs/firstchild-menu-item/%menu_link'
+ *
+ * @param array $menu_link
+ */
+function crumbs_firstchild_menu_link_title(array $menu_link) {
+  return $menu_link['title'];
+}
+
+/**
  * Access callback that checks more than one permission with AND.
  *
  * Used for admin/structure/crumbs/debug/devel

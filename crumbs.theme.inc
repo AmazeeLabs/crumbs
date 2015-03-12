@@ -41,6 +41,21 @@ function crumbs_theme_breadcrumb($variables) {
 }
 
 /**
+ * Implements theme_preprocess_crumbs_breadcrumb_link().
+ *
+ * @param array $variables
+ */
+function crumbs_preprocess_crumbs_breadcrumb_link(array &$variables) {
+  // If first page argument is an array and contains a link_path element which
+  // equals "<firstchild>" for the Menu Firstchild module.
+  if (isset($variables['page_arguments'][0]) && is_array($variables['page_arguments'][0]) && isset($variables['page_arguments'][0]['link_path']) && $variables['page_arguments'][0]['link_path'] === '<firstchild>') {
+    // Turn href into an absolute URL to prevent the link from being rendered
+    // with the active class by l().
+    $variables['href'] = url(check_url(drupal_get_path_alias($variables['href'])), array('absolute' => TRUE));
+  }
+}
+
+/**
  * Default theme implementation for theme('crumbs_breadcrumb_link').
  *
  * @param array $item
