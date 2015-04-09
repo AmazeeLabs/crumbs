@@ -34,6 +34,7 @@ class menu_CrumbsMultiPlugin_hierarchy implements crumbs_MultiPlugin_FindParentI
   function findParent($path, $item) {
 
     $q = db_select('menu_links', 'parent');
+    $q->addTag('crumbs_select_menu_links');
     $q->innerJoin('menu_links', 'child', 'parent.mlid = child.plid');
     $q->addExpression('parent.link_path', 'parent_path');
     $q->addExpression('parent.menu_name', 'menu_name');
@@ -98,6 +99,7 @@ class menu_CrumbsMultiPlugin_link_title implements crumbs_MultiPlugin_FindTitleI
     // _menu_item_localize(). However, a lot of information is already provided
     // in the $item argument, so we can skip these steps.
     $q = db_select('menu_links', 'ml');
+    $q->addTag('crumbs_select_menu_links');
     $q->fields('ml');
     $q->condition('link_path', $path);
     $q->condition('router_path', $item['path']);
